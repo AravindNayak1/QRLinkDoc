@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QR Link PDF – Options</title>
+    <link rel="stylesheet" href="options.css" />
+    <script src="options.js" type="module"></script>
+  </head>
+  <body>
+    <form id="form">
+      <fieldset>
+        <legend>Scanning</legend>
+        <label class="field">
+          <span>Scan resolution</span>
+          <select name="dpi">
+            <option value="150">150 DPI (fastest)</option>
+            <option value="200">200 DPI (default)</option>
+            <option value="300">300 DPI (small or dense codes)</option>
+          </select>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="autoScan" />
+          <span>Scan pages automatically (visible pages first, the rest in the background)</span>
+        </label>
+        <p class="hint">When off, use “Scan all pages” in the viewer's QR menu or in the toolbar popup.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Links</legend>
+        <label class="check">
+          <input type="radio" name="linkTarget" value="_blank" />
+          <span>Open QR links in a new tab</span>
+        </label>
+        <label class="check">
+          <input type="radio" name="linkTarget" value="_self" />
+          <span>Open QR links in the same tab</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="linkHidden" />
+          <span>Also link QR codes that are painted over by other content in the PDF</span>
+        </label>
+      </fieldset>
+
+      <p id="saved" class="hint" aria-live="polite"></p>
+    </form>
+  </body>
+</html>

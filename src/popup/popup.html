@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QR Link PDF</title>
+    <link rel="stylesheet" href="popup.css" />
+    <script src="popup.js" type="module"></script>
+  </head>
+  <body>
+    <header>
+      <img src="../icons/icon32.png" width="20" height="20" alt="" />
+      <h1>QR Link PDF</h1>
+      <label class="switch" title="Open PDFs in the QR Link viewer">
+        <input id="enabled" type="checkbox" />
+        <span aria-hidden="true"></span>
+        <span class="sr">Open PDFs in the QR Link viewer</span>
+      </label>
+    </header>
+
+    <p id="enabledHint" class="muted"></p>
+
+    <section id="fileAccess" class="row">
+      <span>Local files <span id="fileAccessState" class="pill"></span></span>
+      <button id="fileAccessFix" type="button" hidden>Allow access…</button>
+    </section>
+    <p id="fileAccessHelp" class="help" hidden>
+      To open PDFs from your computer, go to the extension's details page and turn on
+      <strong>Allow access to file URLs</strong>.
+    </p>
+
+    <button id="openLocal" type="button" class="primary">Open a local PDF</button>
+
+    <section id="current">
+      <h2>This tab</h2>
+      <p id="summary" class="muted">Open a PDF to see the QR links in it.</p>
+      <button id="scanAll" type="button" hidden>Scan all pages</button>
+      <ol id="links"></ol>
+    </section>
+
+    <footer>
+      <a id="options" href="#">Options</a>
+    </footer>
+  </body>
+</html>

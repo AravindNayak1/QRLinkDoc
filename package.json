@@ -1,0 +1,21 @@
+{
+  "name": "qr-link-pdf",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Edge (MV3) extension that makes QR codes inside PDFs clickable.",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "node --test test/page3.test.mjs test/payload.test.mjs test/background.test.mjs"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@napi-rs/canvas": "^1.1.0",
+    "esbuild": "^0.28.2",
+    "fflate": "^0.8.3",
+    "jsqr": "^1.4.0",
+    "pdfjs-dist": "6.5.438",
+    "zxing-wasm": "^3.1.6"
+  }
+}

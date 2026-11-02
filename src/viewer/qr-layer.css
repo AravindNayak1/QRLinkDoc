@@ -1,0 +1,291 @@
+/* QR Link PDF additions to the pdf.js viewer. */
+
+:root {
+  --qr-accent: #0b63ce;
+  --qr-accent-soft: rgb(11 99 206 / 0.14);
+}
+
+/* One per page, above pdf.js's text and annotation layers. Only the link
+   boxes take pointer events, so text selection elsewhere is unaffected. */
+.pdfViewer .page .qrLinkLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.qrLinkLayer .qrLink {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  outline: 2px solid transparent;
+  outline-offset: 1px;
+  transition: outline-color 120ms ease, background-color 120ms ease;
+}
+
+.qrLinkLayer .qrLink:hover,
+.qrLinkLayer .qrLink:focus-visible {
+  outline-color: var(--qr-accent);
+  background-color: var(--qr-accent-soft);
+}
+
+.qrLinkLayer .qrLinkHidden {
+  outline: 1px dashed rgb(11 99 206 / 0.5);
+}
+
+.qrLinkLayer .qrLinkBadge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  transform: translate(35%, -45%);
+  padding: 0 3px;
+  border-radius: 3px;
+  background: var(--qr-accent);
+  color: #fff;
+  font: 600 9px/13px system-ui, sans-serif;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.qrLinkLayer .qrLink:hover .qrLinkBadge,
+.qrLinkLayer .qrLink:focus-visible .qrLinkBadge,
+.qrLinkLayer .qrLinkHidden .qrLinkBadge {
+  opacity: 1;
+}
+
+@keyframes qrFlash {
+  0%, 100% { outline-color: transparent; background-color: transparent; }
+  30%, 70% { outline-color: var(--qr-accent); background-color: var(--qr-accent-soft); }
+}
+
+.qrLinkLayer .qrLink.qrFlash {
+  animation: qrFlash 1.2s ease 1;
+}
+
+/* Popover for non-URL payloads. */
+.qrPopover {
+  position: fixed;
+  z-index: 200000;
+  max-width: min(420px, calc(100vw - 16px));
+  padding: 10px;
+  border: 1px solid var(--toolbar-border-color, #b8b8b8);
+  border-radius: 6px;
+  background: var(--toolbar-bg-color, #f9f9fa);
+  color: var(--main-color, #0c0c0d);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.2);
+  font: 13px/1.4 system-ui, sans-serif;
+}
+
+.qrPopover pre {
+  margin: 0 0 8px;
+  max-height: 200px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: 12px/1.4 ui-monospace, Consolas, monospace;
+  user-select: text;
+}
+
+.qrPopoverActions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.qrPopover button,
+.qrToolbarButton,
+.qrScanAll,
+.qrEmptyCard button,
+#qrFileAccessBar button {
+  font: inherit;
+  font-size: 12px;
+  padding: 3px 8px;
+  border: 1px solid var(--toolbar-border-color, #b8b8b8);
+  border-radius: 4px;
+  background: var(--field-bg-color, #fff);
+  color: var(--main-color, #0c0c0d);
+  cursor: pointer;
+}
+
+.qrPopover button:hover,
+.qrToolbarButton:hover,
+.qrScanAll:hover {
+  background: var(--button-hover-color, #ddd);
+}
+
+/* Toolbar */
+#qrLinkToolbar {
+  gap: 4px;
+  margin-inline-end: 6px;
+}
+
+.qrToolbarButton {
+  height: 26px;
+  white-space: nowrap;
+  font: 12px/1 system-ui, sans-serif;
+}
+
+.qrCountButton {
+  font-weight: 600;
+  color: var(--qr-accent);
+}
+
+.qrLinksWrap {
+  position: relative;
+}
+
+.qrLinksPanel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 100000;
+  width: min(420px, calc(100vw - 16px));
+  max-height: 60vh;
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--toolbar-border-color, #b8b8b8);
+  border-radius: 6px;
+  background: var(--toolbar-bg-color, #f9f9fa);
+  color: var(--main-color, #0c0c0d);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.2);
+  font: 12px/1.4 system-ui, sans-serif;
+  text-align: start;
+}
+
+.qrLinksHead {
+  margin-bottom: 6px;
+  opacity: 0.75;
+}
+
+.qrScanAll {
+  margin-bottom: 6px;
+}
+
+.qrLinksPanel ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.qrLinksPanel li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qrLinksPanel li > button {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.qrLinksPanel li > button:hover {
+  background: var(--button-hover-color, #ddd);
+}
+
+.qrLinksPage {
+  flex: none;
+  min-width: 3.2em;
+  opacity: 0.65;
+  font-variant-numeric: tabular-nums;
+}
+
+.qrLinksText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qrLinksHiddenTag {
+  flex: none;
+  margin-inline-start: auto;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: rgb(128 128 128 / 0.2);
+  font-size: 10px;
+}
+
+.qrLinksOpen {
+  flex: none;
+  color: var(--qr-accent);
+  font-size: 11px;
+}
+
+/* Empty state (viewer opened without a file) */
+#qrEmptyState {
+  position: absolute;
+  inset: var(--toolbar-height, 32px) 0 0 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.qrEmptyCard {
+  pointer-events: auto;
+  max-width: 360px;
+  padding: 28px 32px;
+  border: 2px dashed var(--toolbar-border-color, #b8b8b8);
+  border-radius: 12px;
+  background: var(--toolbar-bg-color, #f9f9fa);
+  color: var(--main-color, #0c0c0d);
+  text-align: center;
+  font: 14px/1.5 system-ui, sans-serif;
+}
+
+.qrEmptyCard h1 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.qrEmptyCard button {
+  margin-top: 8px;
+  padding: 6px 16px;
+  font-size: 14px;
+  border-color: var(--qr-accent);
+  background: var(--qr-accent);
+  color: #fff;
+}
+
+.qrEmptyHint {
+  margin: 10px 0 0;
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+#qrFileAccessBar {
+  position: absolute;
+  top: calc(var(--toolbar-height, 32px) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100000;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: calc(100vw - 16px);
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #fff4ce;
+  color: #3b2f00;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+  font: 13px/1.4 system-ui, sans-serif;
+}
